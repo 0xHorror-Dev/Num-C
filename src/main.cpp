@@ -9,7 +9,9 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR,int) {
 		return -1;
 	}
 
+	int Res = application->Start();
+
 	delete application;
 
-	return 0;
+	return Res;
 }
