@@ -68,6 +68,10 @@ void Gfx::Draw(HDC hdc){
 	m_pID2D1DCRT->EndDraw();
 }
 
+void Gfx::DrawTitle(){
+
+}
+
 void Gfx::DrawBackGround(){
 	const D2D1_SIZE_F size = this->m_pID2D1DCRT->GetSize();
 	const D2D1_POINT_2F start = D2D1::Point2F(0.0f, 0.0f);

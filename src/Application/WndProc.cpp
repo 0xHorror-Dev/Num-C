@@ -48,7 +48,7 @@ LRESULT App::InternalWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		*/
 		SetWindowLong(hwnd, 0, HTCAPTION); // allows to move window
 		return HTCAPTION;
-	case WM_NCCALCSIZE:
+	case WM_NCCALCSIZE: // Remove System Frame
 		if (wParam == TRUE)
 			SetWindowLong(hwnd, 0, 0);
 		return TRUE;

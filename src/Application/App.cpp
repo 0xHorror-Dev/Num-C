@@ -25,7 +25,7 @@ bool App::RegisterWindowClass(const char* ClassName){
 bool App::InitWindow(){
 	
 	RECT _WndUserArea{ 0, 0, m_Width, m_Height};
-	AdjustWindowRect(&_WndUserArea, WS_POPUPWINDOW, false);
+	AdjustWindowRect(&_WndUserArea, WS_POPUP | WS_CAPTION, false);
 
 	int ScreenCenterX = (GetSystemMetrics(SM_CXSCREEN) - _WndUserArea.right) / 2;
 	int ScreenCenterY = (GetSystemMetrics(SM_CYSCREEN) - _WndUserArea.bottom) / 2;
@@ -35,7 +35,7 @@ bool App::InitWindow(){
 	m_Wnd = CreateWindowExA(0,
 		_NUM_C_WND_CLASS_NAME, 
 		_NUM_C_WND_TITLE,
-		WS_POPUP | WS_BORDER | WS_CHILD,
+		WS_POPUP | WS_CAPTION,
 		ScreenCenterX, 
 		ScreenCenterY,
 		_WndUserArea.right,

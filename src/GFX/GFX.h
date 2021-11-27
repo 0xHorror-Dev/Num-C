@@ -30,6 +30,7 @@ public:
 
 	void Draw(HDC hdc);
 
+	void DrawTitle();
 	void DrawBackGround();
 
 	void Free();
