@@ -1,10 +1,10 @@
 #include "Application/App.h"
 
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR,int) {
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR,int) {
 	
 	App* application = new App();
 
-	if (!application->Init()) {
+	if (!application->Init(hInstance)) {
 		delete application;
 		return -1;
 	}

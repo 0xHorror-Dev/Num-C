@@ -3,10 +3,14 @@
 
 #include <Windows.h>
 
+#include "..//GFX/GFX.h"
+
 #define _NUM_C_WND_CLASS_NAME "WND_NUM_C_CLASS"
 #define _NUM_C_WND_TITLE "Num-C"
 
 class App {
+
+	Gfx* GFX;
 
 	// Window handle
 	HWND m_Wnd;
@@ -14,8 +18,12 @@ class App {
 	// Window class struct
 	WNDCLASSEXA m_WC;
 
+	HINSTANCE hInstance;
+
 	const int m_Width{ 350 };
 	const int m_Height{ 280 };
+
+	RECT ClientRect;
 
 	//Register application window class
 	bool RegisterWindowClass(const char* ClassName);
@@ -23,13 +31,30 @@ class App {
 	// Initialize window
 	bool InitWindow();
 
-	// Informs about errors for user
-	void ErrorCallback(const char* msg);
+	//WndProc redirect to InternalWndProc
+	static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	LRESULT InternalWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	// Events:
+	void Close();
+
+	void Create(HWND hwnd);
+
+	void Paint(HWND hwnd);
 
 public:
 	App();
 
-	bool Init();
+	void UpdateHandle(HWND hwnd);
+
+	// Informs about errors for user
+	void ErrorCallback(const char* msg);
+	HWND GetWindowHandle();
+
+	bool Init(HINSTANCE hInstance);
+
+	RECT* GetClientRect();
 
 	int Start();
 
