@@ -20,7 +20,7 @@ void App::Command(WPARAM wParam, LPARAM lParam) {
 		SendMessage(m_Wnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 		break;
 	case App::CTRL_ID::CTRL_ID_CONVERT_BUTTON:
-		
+		Convert();
 		break;
 	}
 }

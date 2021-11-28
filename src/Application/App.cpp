@@ -47,6 +47,28 @@ bool App::CreateNativeControls(HWND hwnd){
 		return false;
 	}
 
+	m_EditFromNumSys = CreateWindowEx(0,
+		"EDIT", "10",
+		WS_VISIBLE | WS_CHILD,
+		20, 140, 50, 20,
+		hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_EDIT_FROM_NUM_SYS),
+		nullptr, nullptr);
+	if (m_Edit == NULL) {
+		ErrorCallback("Failed to create edit");
+		return false;
+	}
+
+	m_EditInNumSys = CreateWindowEx(0,
+		"EDIT", "2",
+		WS_VISIBLE | WS_CHILD,
+		290, 140, 50, 20,
+		hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_EDIT_IN_NUM_SYS),
+		nullptr, nullptr);
+	if (m_Edit == NULL) {
+		ErrorCallback("Failed to create edit");
+		return false;
+	}
+
 	HFONT FontConsolas = CreateFont(
 		18, 0, 0, 0, FW_REGULAR,
 		0, 0, 0,
@@ -56,6 +78,8 @@ bool App::CreateNativeControls(HWND hwnd){
 		"Consolas");
 
 	SendMessage(m_Edit, WM_SETFONT, reinterpret_cast<WPARAM>(FontConsolas), TRUE);
+	SendMessage(m_EditFromNumSys, WM_SETFONT, reinterpret_cast<WPARAM>(FontConsolas), TRUE);
+	SendMessage(m_EditInNumSys, WM_SETFONT, reinterpret_cast<WPARAM>(FontConsolas), TRUE);
 
 	return true;
 }
@@ -140,11 +164,43 @@ bool App::Init(HINSTANCE hInstance){
 
 	if (!GFX->Init(this)) return false;
 
+	m_pConverter = new Converter;
+
 	return true;
 }
 
-void App::Convert(LPARAM lParam){
+void App::Convert(){
+	std::string Input;
+	std::string FromNum;
+	std::string ToNum;
 
+	GetTextFromTextBox(m_Edit, Input);
+	if (Input.empty()) {
+		ErrorCallback("Please enter number!");
+		return;
+	}
+	
+	GetTextFromTextBox(m_EditFromNumSys, FromNum);
+	if (FromNum.empty()) {
+		ErrorCallback("Please enter from numerical system this number!");
+		return;
+	}
+
+	GetTextFromTextBox(m_EditInNumSys, ToNum);
+	if (ToNum.empty()) {
+		ErrorCallback("Please enter which number system you want to convert the number to!");
+		return;
+	}
+
+	{
+		int nFromNum = atoi(FromNum.c_str());
+		int nToNum = atoi(ToNum.c_str());
+
+		m_pConverter->SetNumber(Input, nFromNum);
+		Input = m_pConverter->ConvertTo(nToNum);
+	}
+
+	SetWindowText(m_Edit, Input.c_str());
 }
 
 RECT* App::GetClientRect(){
@@ -170,8 +226,16 @@ App::~App(){
 		DestroyWindow(m_Wnd);
 
 	if (GFX != NULL) {
-		
+		GFX->Free();
 		delete GFX;
 	}
+	
+	if (m_pConverter != NULL) delete m_pConverter;
 }
 
+void App::GetTextFromTextBox(HWND hwnd, std::string& str){
+	str.resize(MAX_PATH);
+	GetWindowText(hwnd, &str[0], MAX_PATH);
+	str.erase(remove(begin(str), end(str), 0), end(str));
+
+}

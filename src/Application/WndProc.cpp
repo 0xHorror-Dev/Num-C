@@ -55,8 +55,18 @@ LRESULT App::InternalWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam == TRUE)
 			SetWindowLong(hwnd, 0, 0);
 		return TRUE;
-		return FALSE;
+	case WM_SETCURSOR: {
+		HWND wind = reinterpret_cast<HWND>(wParam);
+		if (wind == m_CloseButton || wind == m_MinimizeButton ||
+			wind == m_ConvertButton) {
+			SetCursor(LoadCursor(NULL, IDC_HAND));
+			return TRUE;
+		}
 		break;
+	}
+	case WM_DRAWITEM:
+		GFX->DrawButton(wParam, reinterpret_cast<PDRAWITEMSTRUCT>(lParam));
+		return 0;
 	}
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
