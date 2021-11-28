@@ -22,6 +22,9 @@ class Gfx {
 
 	HWND m_Wnd;
 
+	void DrawTitle();
+	void DrawBackGround();
+
 public:
 
 	Gfx();
@@ -29,9 +32,6 @@ public:
 	bool Init(App* p_App);
 
 	void Draw(HDC hdc);
-
-	void DrawTitle();
-	void DrawBackGround();
 
 	void Free();
 

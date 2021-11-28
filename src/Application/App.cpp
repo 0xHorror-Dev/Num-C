@@ -1,5 +1,65 @@
 #include "App.h"
 
+bool App::CreateNativeControls(HWND hwnd){
+
+	DWORD ButtonsStyle = BS_PUSHBUTTON | BS_OWNERDRAW | WS_VISIBLE | WS_CHILD;
+
+	m_CloseButton = CreateWindowEx(0,
+		"BUTTON", "Close",
+		ButtonsStyle,
+		340, 10, 10, 10, hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_CLOSE_BUTTON),
+		nullptr, nullptr);
+
+	if (m_CloseButton == NULL) {
+		ErrorCallback("Failed to create close button");
+		return false;
+	}
+
+	m_MinimizeButton = CreateWindowEx(0,
+		"BUTTON", "Minimize",
+		ButtonsStyle,
+		320, 10, 10, 10, hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_MINIMIZE_BUTTON),
+		nullptr, nullptr);
+	if (m_MinimizeButton == NULL) {
+		ErrorCallback("Failed to create minimize button");
+		return false;
+	}
+
+	m_ConvertButton = CreateWindowEx(0,
+		"BUTTON", "Convert",
+		ButtonsStyle,
+		80, 140, 200, 40,
+		hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_CONVERT_BUTTON),
+		nullptr, nullptr);
+	if (m_ConvertButton == NULL) {
+		ErrorCallback("Failed to create convert button");
+		return false;
+	}
+
+	m_Edit = CreateWindowEx(0,
+		"EDIT", NULL,
+		WS_VISIBLE | WS_CHILD,
+		50, 100, 250, 20,
+		hwnd, reinterpret_cast<HMENU>(App::CTRL_ID::CTRL_ID_EDIT),
+		nullptr, nullptr);
+	if (m_Edit == NULL) {
+		ErrorCallback("Failed to create edit");
+		return false;
+	}
+
+	HFONT FontConsolas = CreateFont(
+		18, 0, 0, 0, FW_REGULAR,
+		0, 0, 0,
+		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, 
+		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+		DEFAULT_PITCH,
+		"Consolas");
+
+	SendMessage(m_Edit, WM_SETFONT, reinterpret_cast<WPARAM>(FontConsolas), TRUE);
+
+	return true;
+}
+
 bool App::RegisterWindowClass(const char* ClassName){
 	m_WC.cbSize = sizeof(WNDCLASSEXA);
 	m_WC.lpszClassName = ClassName;
@@ -74,12 +134,17 @@ bool App::Init(HINSTANCE hInstance){
 
 	if (!RegisterWindowClass(_NUM_C_WND_CLASS_NAME))return false;
 	if (!InitWindow()) return false;
+	if (!CreateNativeControls(m_Wnd)) return false;
 
 	GFX = new Gfx;
 
 	if (!GFX->Init(this)) return false;
 
 	return true;
+}
+
+void App::Convert(LPARAM lParam){
+
 }
 
 RECT* App::GetClientRect(){
@@ -109,3 +174,4 @@ App::~App(){
 		delete GFX;
 	}
 }
+

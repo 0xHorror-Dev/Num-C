@@ -29,6 +29,9 @@ LRESULT App::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 LRESULT App::InternalWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 
 	switch (uMsg){
+	case WM_COMMAND:
+		this->Command(wParam, lParam);
+		break;
 	case WM_CREATE:
 		this->Create(hwnd);
 		break;

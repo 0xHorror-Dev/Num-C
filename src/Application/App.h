@@ -10,6 +10,20 @@
 
 class App {
 
+	enum CTRL_ID {
+		CTRL_ID_CLOSE_BUTTON,
+		CTRL_ID_MINIMIZE_BUTTON,
+		CTRL_ID_CONVERT_BUTTON,
+		CTRL_ID_EDIT,
+	};
+
+	HWND m_CloseButton;
+	HWND m_MinimizeButton;
+	HWND m_ConvertButton;
+	HWND m_Edit;
+
+	bool CreateNativeControls(HWND hwnd);
+
 	Gfx* GFX;
 
 	// Window handle
@@ -36,12 +50,16 @@ class App {
 
 	LRESULT InternalWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+	void Convert(LPARAM lParam);
+
 	// Events:
 	void Close();
 
 	void Create(HWND hwnd);
 
 	void Paint(HWND hwnd);
+
+	void Command(WPARAM wParam, LPARAM lParam);
 
 public:
 	App();
